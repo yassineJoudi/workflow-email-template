@@ -1,0 +1,61 @@
+<?php
+
+/**
+ * @file
+ * Contains workflow_email_template.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\workflow_email_template\Event\ModerationEvent;
+
+/**
+ * Implements hook_help().
+ */
+function workflow_email_template_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the workflow_email_template module.
+    case 'help.page.workflow_email_template':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('My Awesome Module') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function workflow_email_template_email_template_theme() {
+  return [
+    'workflow_email_template' => [
+      'render element' => 'children',
+    ],
+  ];
+}
+
+
+
+/**
+ * Implement hook_entity_update
+ */
+function workflow_email_template_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
+  if($entity->bundle() != "content_moderation_state") {
+    return;
+  }
+  \Drupal::service('event_dispatcher')->dispatch(ModerationEvent::MODERATION_PRESAVE, new ModerationEvent($entity));
+}
+
+
+/**
+ * Implementing hook_mail()
+ */
+function workflow_email_template_mail($key, &$message, $params) {
+  switch ($key) {
+    case 'workflow_email_notification':
+      $message['subject'] = $params['params']['subject'];
+      $message['body'][] = $params['params']["body"];
+      break;
+  }
+}

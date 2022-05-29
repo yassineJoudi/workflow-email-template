@@ -1,0 +1,7 @@
+services:
+    workflow_email_template.notifier:
+        class: Drupal\workflow_email_template\Service\Notifier   
+    workflow_email_template.modiration.presave:
+        class: Drupal\workflow_email_template\EventSubscriber\ModirationSubscriber
+        tags:
+        - {name: event_subscriber}      

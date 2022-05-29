@@ -1,0 +1,15 @@
+
+# Notifications menu items definition
+entity.notifications.collection:
+  title: 'Notifications'
+  route_name: entity.notifications.collection
+  description: 'List Notifications (bundles)'
+  parent: system.admin_structure
+  weight: 99
+
+workflow_email_template.admin:
+  title: 'Email Template'
+  description: 'Workflow email template'
+  parent: system.admin_config_workflow
+  route_name: entity.notifications.collection
+  weight: 100
